@@ -99,6 +99,7 @@ const SERVICES = [
     port: 4000,
     localEnv: {
       NEXT_PUBLIC_API_BASE_URL: 'http://localhost:4000',
+      VITE_API_BASE_URL: 'http://localhost:4000',
     },
   },
   {
@@ -119,12 +120,30 @@ const SERVICES = [
       NEXT_PUBLIC_APPSYNC_GRAPHQL_ENDPOINT: 'http://localhost:8080/graphql',
     },
   },
+  {
+    id: 'onboarding',
+    title: 'Customer Onboarding (Vite, customer-onboarding)',
+    npmScript: 'dev:onboarding',
+    color: 'yellow',
+    port: 5173,
+    localEnv: {},
+  },
+  {
+    id: 'inventory',
+    title: 'Inventory (Vite, inventory)',
+    npmScript: 'dev:inventory',
+    color: 'green',
+    port: 5174,
+    localEnv: {},
+  },
 ];
 
 const ANSI_COLORS = {
   blue: '\x1b[34m',
   cyan: '\x1b[36m',
   magenta: '\x1b[35m',
+  yellow: '\x1b[33m',
+  green: '\x1b[32m',
 };
 const ANSI_RESET = '\x1b[0m';
 
