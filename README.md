@@ -1,6 +1,6 @@
 # Heylo CLI (`npx heylo`)
 
-The `heylo` CLI is the local dev launcher. It lets you start any combination of the three services — API, Web, and AppSync (Go) — and routes everything else directly to the cloud.
+The `heylo` CLI is the local dev launcher. It lets you start any combination of the local services — API, Web, AppSync (Go), and the standalone Vite apps (Customer Onboarding, Inventory, Customer Support) — and routes everything else directly to the cloud.
 
 ## How it works
 
@@ -17,11 +17,14 @@ Routing:
 
 ## Services
 
-| ID    | What it runs                        | Port | Controls env var                          |
-|-------|-------------------------------------|------|-------------------------------------------|
-| `api` | NestJS API (`heylo-api`)            | 4000 | `NEXT_PUBLIC_API_BASE_URL`                |
-| `web` | Next.js web console (`heylo-web`)   | 3000 | (none — it's the client)                 |
-| `go`  | AppSync GraphQL (Go Lambda, local)  | 8080 | `NEXT_PUBLIC_APPSYNC_GRAPHQL_ENDPOINT`   |
+| ID            | What it runs                                | Port | Controls env var                          |
+|---------------|---------------------------------------------|------|-------------------------------------------|
+| `api`         | NestJS API (`heylo-api`)                    | 4000 | `NEXT_PUBLIC_API_BASE_URL`, `VITE_API_BASE_URL` |
+| `web`         | Next.js web console (`heylo-web`)           | 3000 | (none — it's a client)                    |
+| `go`          | AppSync GraphQL (Go Lambda, local)          | 8080 | `NEXT_PUBLIC_APPSYNC_GRAPHQL_ENDPOINT`    |
+| `onboarding`  | Customer Onboarding (Vite, `customer-onboarding`) | 5173 | (none — it's a client)              |
+| `inventory`   | Inventory (Vite, `inventory`)               | 5174 | (none — it's a client)                    |
+| `support`     | Customer Support (Vite, `customer-support`) | 5175 | (none — it's a client)                    |
 
 ## Environments
 
@@ -41,6 +44,7 @@ heylo                          # interactive: pick services + env
 heylo api                      # API local, everything else → cloud
 heylo api web --env local      # API + web local, Docker MySQL
 heylo go --env dev             # Go GraphQL local, cloud RDS
+heylo api support --env dev    # API + Customer Support Vite app, cloud RDS
 heylo --all --env local        # all services local, Docker MySQL
 heylo --help                   # full usage
 ```

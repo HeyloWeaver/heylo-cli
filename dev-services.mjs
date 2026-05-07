@@ -136,6 +136,14 @@ const SERVICES = [
     port: 5174,
     localEnv: {},
   },
+  {
+    id: 'support',
+    title: 'Customer Support (Vite, customer-support)',
+    npmScript: 'dev:support',
+    color: 'red',
+    port: 5175,
+    localEnv: {},
+  },
 ];
 
 const ANSI_COLORS = {
@@ -144,6 +152,7 @@ const ANSI_COLORS = {
   magenta: '\x1b[35m',
   yellow: '\x1b[33m',
   green: '\x1b[32m',
+  red: '\x1b[31m',
 };
 const ANSI_RESET = '\x1b[0m';
 
