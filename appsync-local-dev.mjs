@@ -251,13 +251,13 @@ func serveGraphQL(w http.ResponseWriter, r *http.Request) {
 
 \tfield, parentType, ok := graphQLOperationField(body.Query)
 \tif !ok {
-\t\twriteGraphQLError(w, http.StatusOK, "unsupported or missing GraphQL field")
+\t\twriteGraphQLError(w, http.StatusOK, "unsupported or missing GraphQL field", nil)
 \t\treturn
 \t}
 
 \tidentity, err := identityFromAuthorization(r.Header.Get("Authorization"))
 \tif err != nil {
-\t\twriteGraphQLError(w, http.StatusOK, "unauthorized")
+\t\twriteGraphQLError(w, http.StatusOK, "unauthorized", nil)
 \t\treturn
 \t}
 
@@ -342,22 +342,33 @@ func jwtPayloadJSON(raw string) ([]byte, error) {
 \treturn base64.URLEncoding.DecodeString(seg)
 }
 
-func writeGraphQLError(w http.ResponseWriter, status int, message string) {
+func writeGraphQLError(w http.ResponseWriter, status int, message string, extensions map[string]interface{}) {
 \tw.Header().Set("Content-Type", "application/json")
 \tw.WriteHeader(status)
+\terrObj := map[string]interface{}{"message": message}
+\tif len(extensions) > 0 {
+\t\terrObj["extensions"] = extensions
+\t}
 \t_ = json.NewEncoder(w).Encode(map[string]interface{}{
-\t\t"errors": []map[string]string{{"message": message}},
+\t\t"errors": []map[string]interface{}{errObj},
 \t})
 }
 
 func writeHandlerError(w http.ResponseWriter, err error) {
 \tswitch e := err.(type) {
 \tcase AppSyncError:
-\t\twriteGraphQLError(w, http.StatusOK, string(e.Message))
+\t\twriteGraphQLError(w, http.StatusOK, string(e.Message), nil)
 \tcase AppSyncErrorResponse:
-\t\twriteGraphQLError(w, http.StatusOK, e.Message)
+\t\text := map[string]interface{}{}
+\t\tif e.Type != "" {
+\t\t\text["errorType"] = e.Type
+\t\t}
+\t\tif e.Field != "" {
+\t\t\text["field"] = e.Field
+\t\t}
+\t\twriteGraphQLError(w, http.StatusOK, e.Message, ext)
 \tdefault:
-\t\twriteGraphQLError(w, http.StatusOK, err.Error())
+\t\twriteGraphQLError(w, http.StatusOK, err.Error(), nil)
 \t}
 }
 `;
